@@ -9,6 +9,7 @@ pipeline {
     environment {
         registry = "ltmben/vprofileapp"
         LOGIN_CREDS = credentials('dockerhub')
+        registryCredentials = "${LOGIN_CREDS_USR}:${LOGIN_CREDS_PSW}"
     }
 
     stages{
@@ -82,7 +83,6 @@ pipeline {
         stage('Upload Image') {
           steps {
             script {
-              def registryCredentials = "${LOGIN_CREDS_USR}:${LOGIN_CREDS_PSW}"
               docker.withRegistry('', registryCredential) {
                 dockerImage.push(":V$BUILD_NUMBER")
                 dockerImage.push('latest')
