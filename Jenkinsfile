@@ -8,7 +8,7 @@ pipeline {
 */
     environment {
         registry = "ltmben/vprofileapp"
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+        DOCKER_REGISTRY_PASSWORD = credentials('dockerhub')
     }
 
     stages{
@@ -79,18 +79,20 @@ pipeline {
           }
         }
 
-        stage('Login to Docker Hub') {
-          steps {
-            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_DOCKERHUB_CREDENTIALS_USR --password-stdin'
-            echo 'Login Completed'
-          }
-        }
-
         stage('Upload Image') {
           steps {
             script {
-              dockerImage.push(":V$BUILD_NUMBER")
-              dockerImage.push('latest')
+              // Set up Docker registry credentials
+              withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_REGISTRY_USERNAME', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')]) {
+                  // Use --password-stdin to securely pass the password
+                  def registryCredentials = "${DOCKER_REGISTRY_USERNAME}:${DOCKER_REGISTRY_PASSWORD}"
+
+                  // Push Docker image with the specified tag and "latest"
+                  docker.withRegistry('', registryCredentials) {
+                      dockerImage.push(":V$BUILD_NUMBER")
+                      dockerImage.push('latest')
+                  }
+              }
             }
           }
         }
