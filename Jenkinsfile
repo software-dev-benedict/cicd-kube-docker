@@ -82,7 +82,7 @@ pipeline {
         stage('Upload Image') {
           steps {
             script {
-              docker.withRegistry('', registryCredential) {
+              docker.withRegistry('https://registry.hub.docker.com/v2/', registryCredential) {
                 dockerImage.push(":V$BUILD_NUMBER")
                 dockerImage.push('latest')
               }
