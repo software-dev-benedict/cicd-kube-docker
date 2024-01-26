@@ -88,7 +88,6 @@ pipeline {
         stage('Upload Image') {
           steps {
             script {
-              dockerImage.push(":V$BUILD_NUMBER")
               dockerImage.push('latest')
             }
           }
