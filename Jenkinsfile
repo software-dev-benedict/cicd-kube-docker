@@ -8,7 +8,7 @@ pipeline {
 */
     environment {
         registry = "ltmben/vproappdock"
-        registryCredential = "dockerhub"
+        TOKEN = "docker-token"
     }
 
     stages{
@@ -76,6 +76,12 @@ pipeline {
             script {
               dockerImage = docker.build registry + ":V$BUILD_NUMBER"
             }
+          }
+        }
+
+        stage('Docker Hub Login') {
+          steps {
+            sh './scripts/docker_login.sh'
           }
         }
 
