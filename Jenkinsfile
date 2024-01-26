@@ -74,7 +74,7 @@ pipeline {
         stage('Build App Image') {
           steps {
             script {
-              dockerImage = docker.build registry
+              dockerImage = docker.build registry + ":$BUILD_NUMBER"
             }
           }
         }
@@ -88,6 +88,7 @@ pipeline {
         stage('Upload Image') {
           steps {
             script {
+              dockerImage.push(":$BUILD_NUMBER")
               dockerImage.push('latest')
             }
           }
@@ -95,7 +96,7 @@ pipeline {
 
         stage('Remove unused docker image') {
           steps {
-            sh "docker rmi $registry:latest"
+            sh "docker rmi $registry:$BUILD_NUMBER"
           }
         }
 
