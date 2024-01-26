@@ -81,7 +81,7 @@ pipeline {
 
         stage('Docker Hub Login') {
           steps {
-            sh './scripts/docker_login.sh'
+            sh 'echo TOKEN | docker login -u ltmben --password-stdin'
           }
         }
 
