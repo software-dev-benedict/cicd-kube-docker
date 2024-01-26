@@ -8,7 +8,7 @@ pipeline {
 */
     environment {
         registry = "ltmben/vproappdock"
-        TOKEN = "docker-token"
+        TOKEN = credentials('docker-token')
     }
 
     stages{
